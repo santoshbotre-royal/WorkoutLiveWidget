@@ -85,7 +85,7 @@ struct WorkoutWidgetLiveActivity: Widget {
           Text(context.state.workoutTimer)
       }
       ///Sets the URL that opens the corresponding app of a Live Activity when a user taps on the Live Activity.
-      .widgetURL(URL(string: "workout://"))
+      .widgetURL(URL(string: "workout://launchapp"))
       ///Applies a subtle tint color to the surrounding border of a Live Activity that appears in the Dynamic Island.
       .keylineTint(Color.red)
     }

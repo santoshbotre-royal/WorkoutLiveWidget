@@ -8,10 +8,38 @@
 import SwiftUI
 import ActivityKit
 
+enum WorkoutStatus {
+  case InProgress
+  case Stopped
+  case NotDetermined
+  
+  var workoutStatus : String {
+    switch self {
+    case .InProgress:
+      "User is working out..."
+    case .Stopped:
+      "User has stopped the workout..."
+    case .NotDetermined:
+      "Not Determined..."
+    }
+  }
+  
+  var color : Color {
+    switch self {
+    case .InProgress:
+      .green
+    case .Stopped:
+      .blue
+    case .NotDetermined:
+      .gray
+    }
+  }
+}
 struct ContentView: View {
   
   @State private var selectedActivity = Workout.Aerobics
   @State private var workoutViewModel = WorkoutViewModel()
+  @State private var currentActivityStatus: WorkoutStatus = .NotDetermined
   
   var body: some View {
     VStack {
@@ -27,16 +55,30 @@ struct ContentView: View {
         print(selectedActivity)
         workoutViewModel.startWorkout(workout: selectedActivity)
         workoutViewModel.keepTrackOfWorkoutUpdates()
+        currentActivityStatus = .InProgress
       })
       
       GenericButton(title: "STOP", tint: .red, action: {
         workoutViewModel.endWorkout()
+        currentActivityStatus = .Stopped
       })
+      
+      Text("\(currentActivityStatus.workoutStatus)")
+        .font(.title3)
+        .foregroundColor(currentActivityStatus.color)
+        .padding()
       
     }
     .onOpenURL { (url) in
       print(url)
-      workoutViewModel.endWorkout()
+      if url.absoluteString.hasPrefix("workout://stop") {
+        workoutViewModel.endWorkout()
+        currentActivityStatus = .Stopped
+      } 
+    }.onAppear {
+      if workoutViewModel.anyWorkoutInProgress() {
+        currentActivityStatus = .InProgress
+      }
     }
   }
   

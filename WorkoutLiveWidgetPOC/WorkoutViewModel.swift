@@ -38,7 +38,6 @@ class WorkoutViewModel {
   }
   
   func endWorkout() {
-
     let finalActivityStatus = WorkoutWidgetAttributes.ContentState(workoutTimer: Date.now...Date())
     let finalContent = ActivityContent(state: finalActivityStatus, staleDate: nil)
 
@@ -48,6 +47,20 @@ class WorkoutViewModel {
             print("Ending the Live Activity: \(activity.id)")
         }
     }
+  }
+  
+  func anyWorkoutInProgress() -> Bool {
+
+    print(Activity<WorkoutWidgetAttributes>.activities)
+    var inProgressActivity = false
+    for activity in Activity<WorkoutWidgetAttributes>.activities {
+      print("the Live Activity: \(activity.id)")
+      if activity.activityState == .active {
+        print("Active the Live Activity: \(activity.id)")
+        inProgressActivity = true
+      }
+    }
+    return inProgressActivity
   }
   
   func keepTrackOfWorkoutUpdates() {
